@@ -1,25 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react"
+import io from 'socket.io-client';
 
+var socket = io("http://localhost:3000");
 
 export default function Board() {
+
+    console.log(socket)
     const ref =  useRef(null);
     var canvasPressed = false;
     var ctx;
+    
 
     
 
     useEffect(()=>{
         ctx = ref.current.getContext("2d");
         
-    },[])
+    },[]);
 
-    /* ref.current.addEventListener('mousedown', function (evt) {
-        console.log('event mousedown', evt);
-        canvasPressed = true;
-        ctx.beginPath();
-        ctx.moveTo(evt.clientX, evt.clientY);
-    }); */
+    useEffect(()=>{
+        socket.on("message",(data)=>{
+            alert(data)
+        })
+    },[socket])
+
+    
     function handleMouseDown(evt){
 
         console.log("mouse down has been activated");
@@ -43,9 +49,18 @@ export default function Board() {
           }
     }
 
+    function hnadleClick(){
+        socket.emit("clicked","hi mouse is clicked")
+    }
+
   return (
+    <>
     <canvas onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className="border-2 border-black" ref={ref} width="500" height="500" >
         hi there
     </canvas>
+
+    <button onClick={hnadleClick}>click me </button>
+
+    </>
   )
 }
