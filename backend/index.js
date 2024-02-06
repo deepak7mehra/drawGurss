@@ -29,6 +29,14 @@ io.on("connection",(socket)=>{
     socket.on("mouseU",(data)=>{
       socket.broadcast.emit("clientUp","false");
     })
+
+    socket.on("erase",(data)=>{
+      socket.broadcast.emit("changeEraser","change to eraser")
+    })
+
+    socket.on("pencil",(data)=>{
+      socket.broadcast.emit("changePencil","change to pencil")
+    })
 })
 
 app.get('/', (req, res) => {

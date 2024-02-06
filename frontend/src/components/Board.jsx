@@ -17,6 +17,8 @@ export default function Board() {
 
     useEffect(()=>{
         ctx = ref.current.getContext("2d");
+        ctx.lineWidth = 2;
+        
         
     },[]);
 
@@ -41,6 +43,17 @@ export default function Board() {
 
         socket.on("clientUp",(data)=>{
             canvasPressed2 = false;
+        })
+
+        socket.on("changeEraser",(data)=>{
+            ctx.lineWidth = 13;
+            ctx.strokeStyle = "white";
+        });
+
+        socket.on("changePencil",(data)=>{
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+
         })
 
         
@@ -72,12 +85,33 @@ export default function Board() {
         }
     }
 
+    function handleEraser(){
+        ctx.lineWidth = 13;
+        ctx.strokeStyle = "white";
+        socket.emit("erase","change to eraser");
+
+    }
+
+    function handlePencil(){
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        socket.emit("pencil","change to pencil")
+
+    }
+
     
   return (
     <>
     <canvas onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className="border-2 border-black" ref={ref} width="500" height="500" >
         hi there
     </canvas>
+
+    <div className="flex gap-5 p-5">
+
+    <button onClick={handleEraser} >eraser</button>
+    <button onClick={handlePencil} >pencil</button>
+    </div>
+    
 
     </>
   )
